@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-const initialItems = [
-  { id: 1, description: "Water Pot", quantity: 2, packed: false },
-  { id: 2, description: "Charger", quantity: 1, packed: false },
-  { id: 3, description: "Shoe", quantity: 3, packed: false },
-];
+// const initialItems = [
+//   { id: 1, description: "Water Pot", quantity: 2, packed: false },
+//   { id: 2, description: "Charger", quantity: 1, packed: false },
+//   { id: 3, description: "Shoe", quantity: 3, packed: false },
+// ];
 
 const App = () => {
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState([]);
 
   function itemHandeler(item) {
     setItems((items) => [...items, item]);
@@ -35,7 +35,7 @@ const App = () => {
           onDelete={ondeleteHandeler}
           onToggleItem={checkMarkItem}
         />
-        <Footer />
+        <Footer items={items} />
       </div>
     </>
   );
@@ -109,6 +109,16 @@ const App = () => {
             />
           ))}
         </ul>
+        <div className="action">
+          <button>
+            <select name="" id="">
+              <option value="insert">Short by insert order</option>
+              <option value="description">Short by description </option>
+              <option value="packed">Short by packed</option>
+            </select>
+          </button>
+          <button>Clear List</button>
+        </div>
       </div>
     );
   }
@@ -127,10 +137,27 @@ const App = () => {
       </li>
     );
   }
-  function Footer() {
+  function Footer({ items }) {
+    if (items.length === 0) {
+      return (
+        <footer className="stats">
+          <p>
+            <em> Start adding items to your packgelist🚀 </em>
+          </p>
+        </footer>
+      );
+    }
+
+    const numItem = items.length;
+    const numPacked = items.filter((item) => item.packed).length;
+    const percentage = Math.round((numPacked / numItem) * 100);
     return (
       <footer className="stats">
-        <em>You have X item on your list, you already packed x (X%) </em>
+        <em>
+          {percentage === 100
+            ? "You packed everything!👌 Ready to go🛩️"
+            : `You have ${numItem} item on your list, you already packed ${numPacked} (${percentage}%)`}
+        </em>
       </footer>
     );
   }
